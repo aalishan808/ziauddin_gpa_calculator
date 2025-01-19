@@ -1,0 +1,8 @@
+flutter_native_splash:
+  color: "#187756" # Background color
+  image: "assets/images/splash_icon.png" # Your app icon
+  android: true
+  ios: true
+  web: true
+  branding: "assets/images/branding.png" # Optional branding image
+  fullscreen: true # Make the splash screen fullscreen

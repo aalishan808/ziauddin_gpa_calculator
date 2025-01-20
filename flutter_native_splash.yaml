@@ -4,5 +4,4 @@ flutter_native_splash:
   android: true
   ios: true
   web: true
-  branding: "assets/images/branding.png" # Optional branding image
   fullscreen: true # Make the splash screen fullscreen

@@ -22,10 +22,10 @@ class HomeScreen extends StatelessWidget {
           child: Row(
             children: [
               Image.asset(
-                'assets/images/logo.webp', // Add your logo in the assets folder
+                'assets/images/logo_home.png', // Add your logo in the assets folder
                 width: 50,
                 height: 50,
-                color: Colors.white,
+
               ),
               SizedBox(width: 10),
               Text('Ziauddin Calculator'),

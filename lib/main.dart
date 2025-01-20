@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'views/splash_screen.dart';
 import 'views/home_screen.dart';
+
 void main() {
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -11,10 +14,10 @@ class MyApp extends StatelessWidget {
       title: 'Ziauddin Calculator',
       theme: ThemeData(
         primarySwatch: Colors.green,
-        primaryColor: Color(0xFF006c2c), // Primary color
+        primaryColor: Color(0xFF187756), // Primary color
         scaffoldBackgroundColor: Colors.white, // Background color
         appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFF006c2c), // App bar color
+          backgroundColor: Color(0xFF187756), // App bar color
           titleTextStyle: TextStyle(
             color: Colors.white, // White text for app bar
             fontSize: 20,
@@ -26,7 +29,11 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(color: Colors.black), // Default text color
         ),
       ),
-      home: HomeScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SplashScreen(),
+        '/home': (context) => HomeScreen(),
+      },
     );
   }
 }

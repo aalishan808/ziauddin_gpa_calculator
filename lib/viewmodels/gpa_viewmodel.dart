@@ -7,7 +7,10 @@ class GPAViewModel {
   List<Course> get courses => _courses;
 
   void addCourse(Course course) {
-    _courses.add(course);
+    // Add course only if valid
+    if (course.creditHours > 0 && course.percentage >= 0 && course.percentage <= 100) {
+      _courses.add(course);
+    }
   }
 
   void removeCourse(int index) {

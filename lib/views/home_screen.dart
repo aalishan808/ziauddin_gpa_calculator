@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart'; // Import the carousel_slider package
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:ziauddin_uni_gpa_calculator/ad_helper.dart';
 import 'gpa_screen.dart';
 import 'cgpa_screen.dart';
 import 'degree_cgpa_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   // List of images for the carousel
   final List<String> images = [
     'assets/images/boat.webp', // Add your image paths here
@@ -13,6 +20,28 @@ class HomeScreen extends StatelessWidget {
     'assets/images/north.webp',
     'assets/images/sukkur.webp',
   ];
+
+BannerAd? _bannerAd;
+
+void initState() {
+  super.initState();
+  _bannerAd = BannerAd(
+    adUnitId: Adhelper.bannerAdUnitId,
+    request: AdRequest(),
+    size: AdSize.banner,
+    listener: BannerAdListener(
+      onAdLoaded: (ad) {
+        setState(() {
+          _bannerAd = ad as BannerAd;
+        });
+      },
+      onAdFailedToLoad: (ad, error) {
+        print("Failed to load a banner ad: ${error.message}");
+        ad.dispose();
+      },
+    ),
+  )..load();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -34,75 +63,87 @@ class HomeScreen extends StatelessWidget {
         ),
         backgroundColor: Color(0xFF006c2c),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF006c2c), // Dark shade of primary color
-              Color(0xFF4CAF50), // Lighter shade of green
+      body: Stack(
+        children:[ Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF006c2c), // Dark shade of primary color
+                Color(0xFF4CAF50), // Lighter shade of green
+              ],
+            ),
+          ),
+          child: Column(
+            children: [
+              // Carousel Slider
+              SizedBox(height: 20),
+              _buildImageSlider(),
+              SizedBox(height: 50),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // GPA Calculator Card
+                    _buildCalculatorCard(
+                      context,
+                      icon: Icons.school,
+                      title: 'GPA Calculator',
+                      subtitle: 'Calculate your semester GPA',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => GPAScreen()),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 20),
+                
+                    // CGPA Calculator Card
+                    _buildCalculatorCard(
+                      context,
+                      icon: Icons.bar_chart,
+                      title: 'CGPA Calculator',
+                      subtitle: 'Calculate cumulative GPA',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CGPAScreen()),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 20),
+                
+                    // Degree CGPA Calculator Card
+                    _buildCalculatorCard(
+                      context,
+                      icon: Icons.assignment,
+                      title: 'BS CGPA Calculator',
+                      subtitle: 'Calculate your BS CGPA',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => DegreeCGPAScreen()),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-        child: Column(
-          children: [
-            // Carousel Slider
-            SizedBox(height: 20),
-            _buildImageSlider(),
-            SizedBox(height: 50),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // GPA Calculator Card
-                  _buildCalculatorCard(
-                    context,
-                    icon: Icons.school,
-                    title: 'GPA Calculator',
-                    subtitle: 'Calculate your semester GPA',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => GPAScreen()),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 20),
-              
-                  // CGPA Calculator Card
-                  _buildCalculatorCard(
-                    context,
-                    icon: Icons.bar_chart,
-                    title: 'CGPA Calculator',
-                    subtitle: 'Calculate your cumulative GPA',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CGPAScreen()),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 20),
-              
-                  // Degree CGPA Calculator Card
-                  _buildCalculatorCard(
-                    context,
-                    icon: Icons.assignment,
-                    title: 'BS CGPA Calculator',
-                    subtitle: 'Calculate your BS CGPA',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => DegreeCGPAScreen()),
-                      );
-                    },
-                  ),
-                ],
-              ),
+        if(_bannerAd != null)
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: _bannerAd!.size.width.toDouble(),
+              height: _bannerAd!.size.height.toDouble(),
+              child: AdWidget(ad: _bannerAd!),
             ),
-          ],
-        ),
+          ),
+        ]
       ),
     );
   }
